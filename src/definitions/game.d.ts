@@ -12,6 +12,7 @@ export interface ICharacter extends Entity {
   xp: number;
   max_xp: number;
   moving: boolean;
+  cc: number;
 }
 
 export type EntityId = string;
@@ -83,6 +84,7 @@ declare global {
     party_list: string[];
     party: { [name: string]: ICharacter };
     entities: { [id: string]: Entity };
+    next_skill: { [id: string]: Date };
     start_runner(): void;
     stop_runner(): void;
   }
@@ -128,6 +130,9 @@ declare global {
   function smart_move(destination: Entity | string, on_done?: any): void;
   function set_skillbar(arguments: string[]): void;
   function buy(name: string, quantity?: number): Promise<object>;
+  function get_nearest_hostile(args: object): Entity;
+  function is_monster(entity: Entity): boolean;
+  function unmap_key(key: string): void;
 
   function draw_circle(x: number, y: number, radius: number, size?: number, color?: number): Drawing;
   function draw_line(x: number, y: number, x2: number, y2: number, size?: number, color?: number): Drawing;

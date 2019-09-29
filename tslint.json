@@ -3,14 +3,14 @@
   "extends": ["tslint:recommended"],
   "jsRules": {},
   "rules": {
-      "semicolon": false,
-      "member-ordering": false,
-      "ordered-imports": false,
-      "object-literal-sort-keys": false,
-      "trailing-comma": false,
-      "object-literal-key-quotes": false,
+      "semicolon": "always",
+      "member-ordering": true,
+      "ordered-imports": true,
+      "object-literal-sort-keys": true,
+      "trailing-comma": "always",
+      "object-literal-key-quotes": true,
       "no-console": false,
-      "interface-name": false
+      "interface-name": true
   },
   "rulesDirectory": []
 }
