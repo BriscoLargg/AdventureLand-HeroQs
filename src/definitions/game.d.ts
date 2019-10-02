@@ -1,4 +1,5 @@
 import { promises } from "fs";
+import { SkillInfo } from "ai/HeroLoops/Skill/SkillInfo";
 
 type ItemName = string; // TODO: Same as with skills
 export interface ICharacter extends Entity {
@@ -54,7 +55,8 @@ export interface Entity {
   dead: boolean;
   npc?: boolean;
   // Buffs are 's' ???? -_-
-  s?: { [T in keyof SkillName]: BuffInfo };
+  s?: { [T in keyof string]: BuffInfo };
+  targeting_party?: boolean;
 }
 
 export interface Monster extends Entity {
@@ -63,16 +65,8 @@ export interface Monster extends Entity {
   range: number;
 }
 
-export interface SkillInfo {
-  mp?: number;
-  name: number;
-  cooldown: number;
-  ratio?: number;
-  range?: number;
-}
-
 export interface GameInfo {
-  skills: { [T in SkillName]: SkillInfo };
+  skills: { [T in string]: SkillInfo };
   items: { [T in ItemName]: ItemInfo };
   monsters: { [id: string]: Monster };
   npcs: { [id: string]: Entity };
@@ -98,10 +92,11 @@ declare global {
   function start_character(name: string, script: string): void;
   function stop_character(name: string, script: string): void;
   function map_key(key: string, thing: string, arg?: string): void;
-  function can_use(skill: SkillName): boolean;
+  function can_use(skill: string): boolean;
   function can_attack(entity: Entity): boolean;
   function buy_with_gold(item: ItemName, q: number): void;
-  function use(skill: SkillName, target?: Entity): void;
+  function use(skill: string, target?: Entity): void;
+  function use_skill(skill: string, target?: Entity): void;
   function heal(entity: Entity): void;
   function attack(entity: Entity): void;
   function loot(): void;
@@ -127,12 +122,13 @@ declare global {
   function use_hp_or_mp(): void;
   function get_targeted_monster(): Entity;
   function get_nearest_monster(args: object): Entity;
-  function smart_move(destination: Entity | string, on_done?: any): void;
+  function smart_move(destination: Entity | any | string, on_done?: any): void;
   function set_skillbar(arguments: string[]): void;
   function buy(name: string, quantity?: number): Promise<object>;
   function get_nearest_hostile(args: object): Entity;
   function is_monster(entity: Entity): boolean;
   function unmap_key(key: string): void;
+  function clear_drawings(): void;
 
   function draw_circle(x: number, y: number, radius: number, size?: number, color?: number): Drawing;
   function draw_line(x: number, y: number, x2: number, y2: number, size?: number, color?: number): Drawing;
@@ -143,63 +139,3 @@ declare global {
   var on_party_invite: undefined | ((from: string) => void);
   var on_party_request: undefined | ((from: string) => void);
 }
-
-export type SkillName =
-  | "use_town"
-  | "move_right"
-  | "blink"
-  | "mluck"
-  | "gm"
-  | "darkblessing"
-  | "move_up"
-  | "supershot"
-  | "move_left"
-  | "interact"
-  | "phaseout"
-  | "revive"
-  | "stack"
-  | "charge"
-  | "partyheal"
-  | "3shot"
-  | "quickpunch"
-  | "rspeed"
-  | "taunt"
-  | "stomp"
-  | "stop"
-  | "shadowstrike"
-  | "pure_eval"
-  | "cburst"
-  | "hardshell"
-  | "use_mp"
-  | "burst"
-  | "toggle_inventory"
-  | "toggle_stats"
-  | "agitate"
-  | "poisonarrow"
-  | "warcry"
-  | "mcourage"
-  | "use_hp"
-  | "curse"
-  | "toggle_character"
-  | "travel"
-  | "5shot"
-  | "move_down"
-  | "esc"
-  | "toggle_run_code"
-  | "attack"
-  | "heal"
-  | "track"
-  | "absorb"
-  | "toggle_code"
-  | "open_snippet"
-  | "throw"
-  | "invis"
-  | "cleave"
-  | "energize"
-  | "light"
-  | "snippet"
-  | "4fingers"
-  | "quickstab"
-  | "magiport"
-  | "pcoat"
-  | "scare";

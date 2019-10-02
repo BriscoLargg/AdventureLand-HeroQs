@@ -1,3 +1,5 @@
+import { D } from "ai/HeroLoops/Base/Debug";
+
 // 	let ccmeter_content = $('<div id="ccmetercontent"></div>')
 // 	.html("<div><div id='ccmeterfill'></div></div>")
 // 	.css({
@@ -62,6 +64,8 @@
 export class CodeCostMeter {
 	constructor() {
 		this.init_ccmeter();
+		this.ccmeter_content();
+		this.update_ccmeter();
 
 		this.StatBars.children().first().after(this.Meter);
 	}
@@ -73,6 +77,7 @@ export class CodeCostMeter {
 	StatBars: any;
 
 	init_ccmeter() {
+		D.DebugInfo("Initialize CC Meter");
 		this.StatBars = $('#bottommid');
 
 		this.StatBars.find('#ccmeter').remove();

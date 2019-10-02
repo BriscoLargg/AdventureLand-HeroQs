@@ -1,5 +1,5 @@
 import { RepeatingAction, RepeatingActionArgs } from "./RepeatingAction";
-import { D } from "../Debug";
+import { D } from "../Base/Debug";
 
 export class UsePotionActionArgs extends RepeatingActionArgs {
     

@@ -8,6 +8,7 @@ export enum DebugLevel {
 
 class Debug {
 
+    DrawingEnabled: boolean = false;
     Enabled: boolean = false;
     Level: DebugLevel = DebugLevel.Critical;
  
@@ -41,6 +42,11 @@ class Debug {
         this.DebugWarning("Debug Warning Enabled");
         this.DebugError("Debug Error Enabled");
         this.DebugCritical("Debug Critical Enabled");
+    }
+
+    Drawing() {
+        //clear_drawings();
+        return this.DrawingEnabled;
     }
 }
 

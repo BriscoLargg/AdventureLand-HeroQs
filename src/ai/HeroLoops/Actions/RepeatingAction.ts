@@ -1,5 +1,6 @@
 import { Action, ActionArgs } from "./Action";
-import { D } from "../Debug";
+import { D } from "../Base/Debug";
+import { ActionQueue } from "../Base/ActionQueue";
 
 export class RepeatingActionArgs extends ActionArgs {
     Repeat: boolean = true;
@@ -16,17 +17,17 @@ export class RepeatingAction extends Action {
 
     LastTick: number = 1; 
     
-    Invoke() {
+    Invoke(queue: ActionQueue) {
         if(this.IsRepeating()) {
-            D.DebugVerbose("Repeat: " + this.Name + " after " + this.Args.DelayInMS + "ms");
-            setTimeout(() => this.PushSelfToQueue(this.Args.Queue), this.Args.DelayInMS);
+            D.DebugError("Repeat: " + this.Name + " after " + this.Args.DelayInMS + "ms");
+            setTimeout(() => this.PushToQueue(queue), this.Args.DelayInMS);
         }
         
-        super.Invoke();
+        super.Invoke(queue);
     }
 
     IsRepeating() {
         D.DebugVerbose("Check repeat " + this.Name + " at " + this.Args.TickCount);
-        return (this.Args && this.Args.DelayInMS && this.Args.Queue);
+        return (this.Args && this.Args.DelayInMS);
     }
 }
