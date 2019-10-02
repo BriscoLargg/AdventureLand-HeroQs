@@ -1,8 +1,9 @@
-import { Entity, SkillInfo } from "definitions/game";
+import { Entity } from "definitions/game";
 import { GetNearestTarget } from "../../Base/Target";
 import { RepeatingAction, RepeatingActionArgs } from "../RepeatingAction";
 import { D } from "../../Base/Debug";
 import { Action } from "../Action";
+import { SkillInfo } from "ai/HeroQs/Skill/SkillInfo";
 
 const AUTO_ATTACK_DELAY = 200;
 

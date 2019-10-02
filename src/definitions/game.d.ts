@@ -1,5 +1,5 @@
 import { promises } from "fs";
-import { SkillInfo } from "ai/HeroLoops/Skill/SkillInfo";
+import { SkillInfo } from "ai/HeroQs/Skill/SkillInfo";
 
 type ItemName = string; // TODO: Same as with skills
 export interface ICharacter extends Entity {

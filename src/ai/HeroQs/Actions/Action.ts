@@ -1,5 +1,5 @@
 import { BaseArgs } from "../Base/Args";
-import { ActionQueue } from "ai/HeroLoops/Base/ActionQueue";
+import { ActionQueue } from "ai/HeroQs/Base/ActionQueue";
 
 export class ActionArgs extends BaseArgs {
     DelayInMS: number = 250;
