@@ -1,4 +1,4 @@
-import { D } from "ai/HeroLoops/Base/Debug";
+import { D } from "ai/HeroQs/Base/Debug";
 
 // 	let ccmeter_content = $('<div id="ccmetercontent"></div>')
 // 	.html("<div><div id='ccmeterfill'></div></div>")
