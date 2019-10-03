@@ -1,12 +1,7 @@
 export interface IArgs {
-    TickCount: number;   
+    TickCount: number;
 }
 
 export class BaseArgs implements IArgs {
-    TickCount: number = 1;
+    public TickCount: number = 1;
 }
-
-
-
-
-

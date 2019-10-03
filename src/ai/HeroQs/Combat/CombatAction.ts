@@ -1,61 +1,48 @@
-import { Entity } from "definitions/game";
-import { GetNearestTarget } from "../../Base/Target";
-import { RepeatingAction, RepeatingActionArgs } from "../RepeatingAction";
-import { D } from "../../Base/Debug";
-import { Action } from "../Action";
-import { SkillInfo } from "ai/HeroQs/Skill/SkillInfo";
+import { D } from "../Base/Debug";
+
+import { IEntity } from "GameDefinitions/IEntity";
+import { GetNearestTarget } from "../Base/Target";
+import { RepeatingAction } from "../Actions/RepeatingAction";
+import { CombatActionArgs } from "./CombatActionArgs";
 
 const AUTO_ATTACK_DELAY = 200;
-
-export class CombatActionArgs extends RepeatingActionArgs {
-    CombatMode: boolean = true;
-    CombatTarget?: Entity | undefined;
-    MonsterFilter?: string[];
-    MonsterParams?: any;
-    PotentialTargets?: Entity[];
-    SearchAndDestroy: boolean = false;
-    Skill?: SkillInfo;
-}
 
 export class CombatAction extends RepeatingAction {
     constructor(args: CombatActionArgs) {
         super(args);
         this.Args = args;
         this.Action = this.AutoCombat;
-        
-        if(this.Args.Skill) {
+
+        if (this.Args.Skill) {
             this.Args.DelayInMS = this.Args.Skill.cooldown;
             this.Name = this.Args.Skill.name;
-        }
-        else {
+        } else {
             this.Args.DelayInMS = AUTO_ATTACK_DELAY;
             this.Name = "AutoAttack";
         }
     }
 
-    Args: CombatActionArgs;
+    public Args: CombatActionArgs;
 
-    
-    ToggleCombat() {
-        this.Args.CombatMode ? this.Args.CombatMode = false : this.Args.CombatMode = true;	
+    public ToggleCombat() {
+        this.Args.CombatMode ? this.Args.CombatMode = false : this.Args.CombatMode = true;
     }
 
-    Attack(target: Entity) {
-        if(this.Args.Skill) {
+    public Attack(target: IEntity) {
+        if (this.Args.Skill) {
             set_message(this.Args.Skill.name);
-            use_skill(this.Args.Skill.name, target);   
-        }
-        else {
+            use_skill(this.Args.Skill.name, target);
+        } else {
             set_message("AutoAttack");
             attack(target);
         }
     }
 
-    Approach(target: Entity) {
+    public Approach(target: IEntity) {
         smart_move(target);
     }
 
-    ApproachAndAttack(target: Entity) {
+    public ApproachAndAttack(target: IEntity) {
         if(this.CanApproach(target)) {
             this.Approach(target);
         }
@@ -65,30 +52,29 @@ export class CombatAction extends RepeatingAction {
         }
     }
 
-    CanApproach(target: Entity) {
+    public CanApproach(target: IEntity) {
         return !in_attack_range(target) && this.Args.SearchAndDestroy;
     }
 
-    CanAttack(target: Entity) {
+    public CanAttack(target: IEntity) {
         return can_attack(target);
     }
 
-    AutoCombat() {
-        if(!this.Args) D.DebugError("CombatActionArgs are undefined");
-        if(!this.Action) return;
-		if(this.IsCombatEnded()) return;
-        
-        if(this.Args.CombatTarget == undefined || this.Args.CombatTarget.dead != false) { 
+    public AutoCombat() {
+        if (!this.Args) { D.DebugError("CombatActionArgs are undefined"); }
+        if (!this.Action || this.IsCombatEnded()) { return; }
+
+        if (this.Args.CombatTarget === undefined || this.Args.CombatTarget.dead !== false) {
             GetNearestTarget(this.Args);
         }
-        
-        if(this.Args.CombatTarget) {
+
+        if (this.Args.CombatTarget) {
             this.ApproachAndAttack(this.Args.CombatTarget);
         }
     }
 
-    IsCombatEnded() {
-        if(!this.Args) return;
+    public IsCombatEnded() {
+        if (!this.Args) { return; }
         return (!this.Args.CombatMode || character.rip || is_moving(character));
     }
 }

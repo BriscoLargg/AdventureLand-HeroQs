@@ -1,11 +1,11 @@
-import { Entity } from "definitions/game";
+import { IEntity } from "GameDefinitions/IEntity";
 
-export function approach_target_direct(target: Entity) {
+export function approach_target_direct(target: IEntity) {
 	smart_move(target);
 }
 
-
-	/*let myX: number | undefined = character.real_x;
+	/* 
+	let myX: number | undefined = character.real_x;
 	let myY: number | undefined = character.real_y;
 	let theirX: number | undefined = target.real_x;
 	let theirY: number | undefined = target.real_x;

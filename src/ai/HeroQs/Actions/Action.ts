@@ -1,35 +1,29 @@
-import { BaseArgs } from "../Base/Args";
-import { ActionQueue } from "ai/HeroQs/Base/ActionQueue";
-
-export class ActionArgs extends BaseArgs {
-    DelayInMS: number = 250;
-    //Queue: ActionQueue = new ActionQueue();    
-}
+import { ActionQueue } from "ai/HeroQs/Actions/ActionQueue";
+import { ActionArgs } from "./ActionArgs";
 
 export class Action {
     constructor(args: ActionArgs, delegate?: any) {
         this.Action = delegate;
         this.Args = args;
-        
-        if(delegate && delegate.name) {
+
+        if (delegate && delegate.name) {
             this.Name = delegate.name;
         }
     }
 
-    Action: any;
-    Args: ActionArgs;
-    Name: string = "";
+    public Action: any;
+    public Args: ActionArgs;
+    public Name: string = "";
 
-
-    Invoke(queue: ActionQueue) {
+    public Invoke(queue: ActionQueue) {
         this.Args ? this.Action(this.Args) : this.Action();
     }
 
-    PushToQueue(queue: ActionQueue) {
-        queue.push(this);  
+    public PushToQueue(queue: ActionQueue) {
+        queue.push(this);
     }
 
-    static Create() {
-        return new Action(new ActionArgs())
+    public static Create() {
+        return new Action(new ActionArgs());
     }
 }

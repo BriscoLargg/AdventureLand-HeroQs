@@ -1,20 +1,10 @@
+import { ICharacter } from "./ICharacter";
+import { IEntity } from "GameDefinitions/IEntity";
+import { IMonster } from "./IMonster";
+import { ISkill } from "GameDefinitions/ISkill";
 import { promises } from "fs";
-import { SkillInfo } from "ai/HeroQs/Skill/SkillInfo";
 
 type ItemName = string; // TODO: Same as with skills
-export interface ICharacter extends Entity {
-  party?: string;
-  name: string;
-  range: number;
-  items: (ItemInfo | undefined)[];
-  ctype: string;
-  rip: boolean;
-  gold: number;
-  xp: number;
-  max_xp: number;
-  moving: boolean;
-  cc: number;
-}
 
 export type EntityId = string;
 
@@ -22,54 +12,24 @@ export interface Drawing {
   destroy: () => void;
 }
 
-export interface ItemInfo {
+export interface IItem {
   level?: number;
   q?: number;
   name: string;
   g?: number;
 }
 
-export interface BuffInfo {
+export interface IBuff {
   f: string;
   // duration in ms
   ms: number;
 }
 
-export interface Entity {
-  name?: string;
-  id?: string;
-  real_x?: number;
-  real_y?: number;
-  going_x?: number;
-  going_y?: number;
-  hp: number;
-  max_hp: number;
-  mp: number;
-  max_mp: number;
-  attack: number;
-  target: string;
-  xp: number;
-  type: string;
-  mtype?: string;
-  transform?: any;
-  dead: boolean;
-  npc?: boolean;
-  // Buffs are 's' ???? -_-
-  s?: { [T in keyof string]: BuffInfo };
-  targeting_party?: boolean;
-}
-
-export interface Monster extends Entity {
-  mtype: string;
-  id: string;
-  range: number;
-}
-
 export interface GameInfo {
-  skills: { [T in string]: SkillInfo };
-  items: { [T in ItemName]: ItemInfo };
-  monsters: { [id: string]: Monster };
-  npcs: { [id: string]: Entity };
+  skills: { [T in string]: ISkill };
+  items: { [T in ItemName]: IItem };
+  monsters: { [id: string]: IMonster };
+  npcs: { [id: string]: IEntity };
 }
 
 declare global {
@@ -77,7 +37,7 @@ declare global {
     clear_game_logs(): void;
     party_list: string[];
     party: { [name: string]: ICharacter };
-    entities: { [id: string]: Entity };
+    entities: { [id: string]: IEntity };
     next_skill: { [id: string]: Date };
     start_runner(): void;
     stop_runner(): void;
@@ -93,12 +53,12 @@ declare global {
   function stop_character(name: string, script: string): void;
   function map_key(key: string, thing: string, arg?: string): void;
   function can_use(skill: string): boolean;
-  function can_attack(entity: Entity): boolean;
+  function can_attack(entity: IEntity): boolean;
   function buy_with_gold(item: ItemName, q: number): void;
-  function use(skill: string, target?: Entity): void;
-  function use_skill(skill: string, target?: Entity): void;
-  function heal(entity: Entity): void;
-  function attack(entity: Entity): void;
+  function use(skill: string, target?: IEntity): void;
+  function use_skill(skill: string, target?: IEntity): void;
+  function heal(entity: IEntity): void;
+  function attack(entity: IEntity): void;
   function loot(): void;
   function upgrade(itemPos: number, scrollPos: number, offeringPos?: number): void;
   function load_code(foo: string): void;
@@ -108,25 +68,25 @@ declare global {
   function send_party_invite(to: string): void;
   function request_party_invite(to: string): void;
   function set_message(msg: string): void;
-  function get_player(name: string): Entity | undefined;
-  function change_target(target: Entity, send?: boolean): void;
-  function get_target_of(entity: Entity): Entity | undefined;
-  function distance(entity1: Entity, entity2: Entity): number;
+  function get_player(name: string): IEntity | undefined;
+  function change_target(target: IEntity, send?: boolean): void;
+  function get_target_of(entity: IEntity): IEntity | undefined;
+  function distance(entity1: IEntity, entity2: IEntity): number;
   function move(x: number, y: number): void;
   function xmove(x: number, y: number): void;
   function show_json(stuff: any): void;
   function can_move(args: { map: string; x: number; y: number; going_x: number; going_y: number }): boolean;
   function stop(what: string): void;
-  function is_moving(entity: Entity): boolean;
-  function in_attack_range(target: Entity): boolean;
+  function is_moving(entity: IEntity): boolean;
+  function in_attack_range(target: IEntity): boolean;
   function use_hp_or_mp(): void;
-  function get_targeted_monster(): Entity;
-  function get_nearest_monster(args: object): Entity;
-  function smart_move(destination: Entity | any | string, on_done?: any): void;
+  function get_targeted_monster(): IEntity;
+  function get_nearest_monster(args: object): IEntity;
+  function smart_move(destination: IEntity | any | string, on_done?: any): void;
   function set_skillbar(arguments: string[]): void;
   function buy(name: string, quantity?: number): Promise<object>;
-  function get_nearest_hostile(args: object): Entity;
-  function is_monster(entity: Entity): boolean;
+  function get_nearest_hostile(args: object): IEntity;
+  function is_monster(entity: IEntity): boolean;
   function unmap_key(key: string): void;
   function clear_drawings(): void;
 
