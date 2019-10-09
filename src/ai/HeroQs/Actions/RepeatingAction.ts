@@ -17,7 +17,7 @@ export class RepeatingAction extends Action {
 
     public Invoke(queue: ActionQueue) {
         if (this.IsRepeating()) {
-            if (this.Name) { D.DebugError("Repeat: " + this.Name + " after " + this.Args.DelayInMS + "ms"); }
+            if (this.Name) { D.DebugInfo("Repeat: " + this.Name + " after " + this.Args.DelayInMS + "ms"); }
             setTimeout(() => this.PushToQueue(queue), this.Args.DelayInMS);
         }
 

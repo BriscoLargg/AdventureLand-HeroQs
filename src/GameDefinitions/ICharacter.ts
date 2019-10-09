@@ -1,5 +1,5 @@
-import { IItem } from "./game";
 import { IEntity } from "./IEntity";
+import { IItem } from "./IItem";
 
 export interface ICharacter extends IEntity {
   party?: string;

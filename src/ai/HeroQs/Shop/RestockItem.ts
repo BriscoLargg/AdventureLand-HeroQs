@@ -1,4 +1,4 @@
-import { IItem } from "GameDefinitions/game";
+import { IItem } from "GameDefinitions/IItem";
 
 export class RestockItem {
     constructor(item: IItem, minimum: number, quantity: number, vendor: string) {

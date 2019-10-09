@@ -2,22 +2,22 @@ import { D } from "../Base/Debug";
 
 import { Action } from "./Action";
 import { ActionArgs } from "./ActionArgs";
+import { RepeatingAction } from "./RepeatingAction";
+import { RepeatingActionArgs } from "./RepeatingActionArgs";
 
-export class ActionQueue extends Action {
-    constructor(args: ActionArgs) {
+export class ActionQueue extends RepeatingAction {
+    constructor(args: RepeatingActionArgs) {
         super(args);
     }
 
     public Actions: Action[] = [];
-    public DelayInMS: number = 100;
     public InvokingAction: Action | ActionQueue | undefined;
     public Name: string = "ActionQueue";
     public SecondsCount: number = 0;
     public TickCount: number = 1;
     public TickInMS: number = 1;
 
-    // Overloaded array operators match casing of underlying
-
+    // Overloaded array operators match casing of underlying object
     public push(action: Action) {
         if (action) { this.Actions.push(action); }
     }
@@ -61,7 +61,14 @@ export class ActionQueue extends Action {
         return action;
     }
 
+    public Load(actions: Action[]) {
+        actions.forEach((a) => {
+            a.PushToQueue(this);
+        });
+    }
+
     public Invoke(queue: ActionQueue) {
+        super.Invoke(queue);
         this.PushToQueue(queue);
         this.GetNextAndInvoke();
     }
@@ -78,15 +85,14 @@ export class ActionQueue extends Action {
             if (this.InvokingAction === undefined) { D.DebugError("Queue is Empty, IsReady is broken"); }
 
             if (this.InvokingAction) {
-            D.DebugVerbose("Exec " +
-                            this.InvokingAction + " " +
-                            this.InvokingAction.Name + " at tick: " +
-                            this.TickCount +
-                            " w/CC: " + character.cc
-                        );
+                D.CC("Exec " +
+                    this.InvokingAction + " " +
+                    this.InvokingAction.Name + " at tick: " +
+                    this.TickCount +
+                    " w/CC: " + character.cc
+                );
 
-            this.InvokingAction.Invoke(this);
-
+                this.InvokingAction.Invoke(this);
             }
         }
     }

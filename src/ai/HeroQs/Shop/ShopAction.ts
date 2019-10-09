@@ -1,10 +1,9 @@
 import { D } from "../Base/Debug";
 
-import { IItem } from "GameDefinitions/game";
-
 import { RepeatingAction } from "../Actions/RepeatingAction";
 import { ShopActionArgs } from "./ShopActionArgs";
 
+import { IItem } from "GameDefinitions/IItem";
 import { RestockItem } from "./RestockItem";
 
 export class ShopAction extends RepeatingAction {
@@ -40,8 +39,8 @@ export class ShopAction extends RepeatingAction {
   }
 
   public Resupply(args: ShopActionArgs, stockItem: RestockItem) {
-    if(!args) { return; }
-    if(this.ResupplyInProgress) { return; }
+    if (!args) { return; }
+    if (this.ResupplyInProgress) { return; }
     this.ResupplyInProgress = true;
 
     smart_move({ "to": stockItem.Vendor, "return": true }, () => {
@@ -57,8 +56,12 @@ export class ShopAction extends RepeatingAction {
 
   public GetQuantityFromInventory(item: IItem): number {
     let quantity: number = 0;
+    if (!item) { return quantity; }
 
-    const itemsInInventory: IItem[] = this.SearchInventory((i) => i.name === item.name);
+    const itemsInInventory: IItem[] = this.SearchInventory((i) => {
+        if (!i) { return false ; }
+        return (i.name === item.name);
+    });
 
     itemsInInventory.forEach((i) => {
       if (i.q) {

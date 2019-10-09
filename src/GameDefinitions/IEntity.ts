@@ -1,4 +1,4 @@
-import { IBuff } from "GameDefinitions/game";
+import { IBuff } from "./IBuff";
 
 export interface IEntity {
     name?: string;

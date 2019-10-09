@@ -1,9 +1,25 @@
+import { Serializable } from "../ai/HeroQs/Base/Serializable";
+
 export interface ISkill {
   mp?: number;
   name: SkillName;
   cooldown: number;
   ratio?: number;
   range?: number;
+}
+
+class Skill extends Serializable implements ISkill  {
+    constructor(skillname: SkillName, cooldown: number) {
+        super();
+        this.name = skillname;
+        this.cooldown = cooldown;
+    }
+
+    public name: SkillName;
+    public cooldown: number;
+    public mp?: number;
+    public ratio?: number;
+    public ranger?: number;
 }
 
 export enum SkillName {

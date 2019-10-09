@@ -1,18 +1,46 @@
-import { ActionQueue } from "../Actions/ActionQueue";
 import { D } from "../Base/Debug";
-import { ActionArgs } from "../Actions/ActionArgs";
+
+import { IEntity } from "GameDefinitions/IEntity";
+import { ActionQueue } from "../Actions/ActionQueue";
+import { Combat } from "./Combat";
+import { CombatStackArgs } from "./CombatStackArgs";
 
 export class CombatStack extends ActionQueue {
-    constructor(args: ActionArgs) {
+    constructor(args: CombatStackArgs) {
         super(args);
 
-        this.TickInMS = 200;
+        this.Args = args;
+
+        this.Args.DelayInMS = 250;
         this.Name = "CombatStack";
+
+        this.Action = () => this.Args.TargetingSolution.AcquireTargets();
+
+    }
+
+    public Args: CombatStackArgs;
+    public Actions: Combat[] = [];
+    public CurrentTarget?: IEntity;
+
+    public pop(): Combat | undefined {
+        const action = this.Actions.pop();
+        if (action) {
+            action.Args.CombatEnabled = this.Args.CombatEnabled;
+            this.Args.TargetingSolution.SetActionTarget(action);
+        }
+        return action;
+    }
+
+    public unshift(action: Combat) {
+        if (action) { this.Actions.push(action); }
     }
 
     public GetNext() {
         const action = this.pop();
-        if (action) { D.DebugInfo("OH YEAH TIME TO FIGHT " + action.Name); }
         return action;
+    }
+
+    public ToggleCombat() {
+        this.Args.CombatEnabled ? this.Args.CombatEnabled = false : this.Args.CombatEnabled = true;
     }
 }

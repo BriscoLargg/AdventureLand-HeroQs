@@ -1,7 +1,12 @@
 import { IEntity } from "GameDefinitions/IEntity";
+import { Vector } from "./Vector";
 
 export function approach_target_direct(target: IEntity) {
-	smart_move(target);
+    smart_move(target);
+}
+
+export function pathToTarget(target: IEntity | Vector | string ) {
+
 }
 
 	/* 

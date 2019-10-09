@@ -1,22 +1,24 @@
-import { IItem } from "GameDefinitions/game";
-
 import { ActionArgs } from "../Actions/ActionArgs";
 import { ActionQueue } from "../Actions/ActionQueue";
 import { RepeatingAction } from "../Actions/RepeatingAction";
 import { RepeatingActionArgs } from "../Actions/RepeatingActionArgs";
 import { UsePotionsAction } from "../Actions/UsePotionsAction";
 import { D, DebugLevel } from "../Base/Debug";
-import { CombatAction } from "../Combat/CombatAction";
-import { CombatActionArgs } from "../Combat/CombatActionArgs";
+
 import { CombatStack } from "../Combat/CombatStack";
+import { CombatStackArgs } from "../Combat/CombatStackArgs";
 import { RestockItem } from "../Shop/RestockItem";
 import { ShopAction } from "../Shop/ShopAction";
 import { ShopActionArgs } from "../Shop/ShopActionArgs";
-import { HuntersMark } from "../Skill/Ranger/HuntersMark";
-import { Supershot } from "../Skill/Ranger/Supershot";
 
-import { CodeCostMeter } from "gui/CodeCostMeter";
-import { Action } from "../Actions/Action";
+import { CodeCostMeter } from "GUI/CodeCostMeter";
+import { Target } from "../Target/Target";
+
+import { IItem } from "GameDefinitions/IItem";
+import { SkillName } from "GameDefinitions/ISkill";
+import { Combat } from "../Combat/Combat";
+import { CombatArgs } from "../Combat/CombatArgs";
+import { TargetArgs } from "../Target/TargetArgs";
 
 set_skillbar(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]);
 
@@ -35,45 +37,40 @@ game_log("To reload your code, first press 9 to stop the current AI, and then pr
 const HP_SMALL: IItem = {"name": "hpot0"};
 const MP_SMALL: IItem = {"name": "mpot0"};
 
-D.Level = DebugLevel.Error;
+D.Level = DebugLevel.Information;
 D.Enabled = true;
 D.DrawingEnabled = true;
+D.CodeCost = false;
 
 new CodeCostMeter().init_ccmeter();
 
-const combatArgs: CombatActionArgs = new CombatActionArgs();
-combatArgs.CombatMode = true;
-combatArgs.MonsterFilter = ["tortoise"]; // ["bee", "goo"];
-combatArgs.MonsterParams = { "min_xp": 100, "min_att": 60, "max_att": 200, };
-combatArgs.SearchAndDestroy = true;
+const targetArgs: TargetArgs = new TargetArgs();
 
-let shotArgs = new CombatActionArgs();
-shotArgs = { ...combatArgs };
-shotArgs.Skill = new Supershot();
-const supershot = new CombatAction(shotArgs);
+targetArgs.MonsterFilter = ["bee"]; // ["bee", "goo"];
+targetArgs.MonsterParams = { "min_xp": 100, "min_att": 60, "max_att": 200, };
+const target = new Target(targetArgs);
 
-let markArgs = new CombatActionArgs();
-markArgs = { ... combatArgs };
-markArgs.Skill = new HuntersMark();
-const huntersmark = new CombatAction(markArgs);
+const supershot = new Combat(new CombatArgs(SkillName.supershot, 30000));
+const huntersmark = new Combat(new CombatArgs(SkillName.huntersmark, 10000));
+const autoattack = new Combat(new CombatArgs(SkillName.attack, 250));
 
-const combatStack = new CombatStack(new ActionArgs());
-combatStack.push(new CombatAction(combatArgs));
-combatStack.push(supershot);
-combatStack.push(huntersmark);
+const combatArgs = new CombatStackArgs(target);
+const combatStack: CombatStack = new CombatStack(combatArgs);
+combatStack.Load([autoattack, huntersmark, supershot]);
 
-const HP = new RestockItem(HP_SMALL, 50, 1200, "potions");
-const MP = new RestockItem(MP_SMALL, 50, 1200, "potions");
+const HP = new RestockItem(HP_SMALL, 15, 400, "potions");
+const MP = new RestockItem(MP_SMALL, 50, 600, "potions");
 const shopArgs: ShopActionArgs = new ShopActionArgs();
 shopArgs.Restock = [HP, MP];
 shopArgs.DelayInMS = 30000;
 
 // console.log(args);
-const Q = new ActionQueue(new ActionArgs());
+const Q = new ActionQueue(new RepeatingActionArgs());
 
 Q.push(new UsePotionsAction(new RepeatingActionArgs()));
 Q.push(new RepeatingAction(new RepeatingActionArgs(), loot));
 Q.push(combatStack);
+// Q.push(target);
 Q.push(new ShopAction(shopArgs));
 /*
 Q.Push(new RepeatingAction(new RepeatingActionArgs(), () => {

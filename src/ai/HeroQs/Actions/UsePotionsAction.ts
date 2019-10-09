@@ -23,8 +23,8 @@ export class UsePotionsAction extends RepeatingAction {
     public UpdateStats() {
         this.MissingHP = character.max_hp - character.hp;
         this.MissingMP = character.max_mp - character.mp;
-        // this.RemainingPercentMP = character.mp/character.max_mp;
-        // this.RemainingPercentHP = character.hp/character.max_hp;
+        this.RemainingPercentMP = character.mp / character.max_mp;
+        this.RemainingPercentHP = character.hp / character.max_hp;
         D.DebugVerbose("MissingHP: " + this.MissingHP + "  MissingMP: " + this.MissingMP);
     }
 
@@ -33,7 +33,16 @@ export class UsePotionsAction extends RepeatingAction {
         if ( new Date() < parent.next_skill.use_hp) { return; }
         this.UpdateStats();
 
-        if (this.MissingHP > 200 ) {
+        D.DebugInfo("Remaining HP%: " + this.RemainingPercentHP +
+                    "Remaining MP%: " + this.RemainingPercentMP);
+
+        if (this.RemainingPercentHP < 0.2) {
+            use(SkillName.use_hp);
+            used = true;
+        } else if (this.RemainingPercentMP < 0.3) {
+            use(SkillName.use_mp);
+            used = true;
+        } else if (this.MissingHP > 200 ) {
             use(SkillName.use_hp);
             used = true;
         } else if(this.MissingMP > 300) {

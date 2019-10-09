@@ -8,35 +8,35 @@ export enum DebugLevel {
 
 class Debug {
 
-    DrawingEnabled: boolean = false;
-    Enabled: boolean = false;
-    Level: DebugLevel = DebugLevel.Critical;
- 
-    printAtDebugLevel(message: string, level: DebugLevel) {
-        //if(level == DebugLevel.Information) console.log("Try to print debug at " + level + " and DebugLevel " + args.DebugLevel);
-        if(this.Enabled && level <= this.Level) {
+    public CodeCost: boolean = false;
+    public DrawingEnabled: boolean = false;
+    public Enabled: boolean = false;
+    public Level: DebugLevel = DebugLevel.Critical;
+
+    public printAtDebugLevel(message: string, level: DebugLevel) {
+        // D.DebugInfo("Try to print debug at " + level + " and DebugLevel " + args.DebugLevel);
+        if (this.Enabled && level <= this.Level) {
             console.log(message);
-        }       
-    };
-    
-    DebugCritical(message: string) {
+        }
+    }
+
+    public DebugCritical(message: string) {
         this.printAtDebugLevel(message, DebugLevel.Critical);
     }
-    DebugError(message: string) {
+    public DebugError(message: string) {
         this.printAtDebugLevel(message, DebugLevel.Error );
     }
-    DebugWarning(message: string) {
+    public DebugWarning(message: string) {
         this.printAtDebugLevel(message, DebugLevel.Warning );
     }
-    
-    DebugInfo(message: string) {
+    public DebugInfo(message: string) {
         this.printAtDebugLevel(message, DebugLevel.Information );
     }
-    DebugVerbose(message: string) {
+    public DebugVerbose(message: string) {
         this.printAtDebugLevel(message, DebugLevel.Verbose );
     }
-    
-    DebugCheck() {
+
+    public DebugCheck() {
         this.DebugVerbose("Debug Verbose Enabled");
         this.DebugInfo("Debug Info Enabled");
         this.DebugWarning("Debug Warning Enabled");
@@ -44,9 +44,15 @@ class Debug {
         this.DebugCritical("Debug Critical Enabled");
     }
 
-    Drawing() {
-        //clear_drawings();
+    public Drawing() {
+        // clear_drawings();
         return this.DrawingEnabled;
+    }
+
+    public CC(message: string) {
+        if (this.CodeCost) {
+            this.DebugCritical(message);
+        }
     }
 }
 
