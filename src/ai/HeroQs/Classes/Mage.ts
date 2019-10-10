@@ -46,7 +46,7 @@ new CodeCostMeter().init_ccmeter();
 
 const targetArgs: TargetArgs = new TargetArgs();
 
-targetArgs.MonsterFilter = ["snake"]; // ["bee", "goo"];
+targetArgs.MonsterFilter = ["squig"]; // ["bee", "goo"];
 targetArgs.MonsterParams = { "min_xp": 100, "min_att": 60, "max_att": 200, };
 const target = new Target(targetArgs);
 

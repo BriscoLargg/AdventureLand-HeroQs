@@ -15,6 +15,7 @@ declare global {
     start_runner(): void;
     stop_runner(): void;
   }
+
   var $: any;
   var character: ICharacter;
   var game_logs: any[];
@@ -28,6 +29,7 @@ declare global {
   function buy_with_gold(item: string, q: number): void;
   function can_attack(entity: IEntity): boolean;
   function can_move(args: { map: string; x: number; y: number; going_x: number; going_y: number }): boolean;
+  function can_move_to(x: number, y: number): boolean;
   function can_use(skill: string): boolean;
   function change_target(target: IEntity, send?: boolean): void;
   function clear_drawings(): void;

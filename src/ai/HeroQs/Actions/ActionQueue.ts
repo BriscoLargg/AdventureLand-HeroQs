@@ -1,7 +1,6 @@
 import { D } from "../Base/Debug";
 
 import { Action } from "./Action";
-import { ActionArgs } from "./ActionArgs";
 import { RepeatingAction } from "./RepeatingAction";
 import { RepeatingActionArgs } from "./RepeatingActionArgs";
 
@@ -68,7 +67,9 @@ export class ActionQueue extends RepeatingAction {
     }
 
     public Invoke(queue: ActionQueue) {
-        super.Invoke(queue);
+        if (this.Action) {
+            this.Action();
+        }
         this.PushToQueue(queue);
         this.GetNextAndInvoke();
     }

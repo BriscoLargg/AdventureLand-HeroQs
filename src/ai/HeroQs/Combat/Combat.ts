@@ -3,6 +3,7 @@ import { D } from "../Base/Debug";
 import { IEntity } from "GameDefinitions/IEntity";
 import { SkillName } from "GameDefinitions/ISkill";
 import { RepeatingAction } from "../Actions/RepeatingAction";
+import { Movement } from "../Base/Movement";
 import { CombatArgs } from "./CombatArgs";
 
 const AUTO_ATTACK_DELAY = 250;
@@ -51,11 +52,7 @@ export class Combat extends RepeatingAction {
     }
 
     public Approach(target: IEntity) {
-        if (target && target.real_x && target.real_y) {
-            move(target.real_x, target.real_y);
-        } else {
-            smart_move(target);
-        }
+        new Movement(target).Invoke();
     }
 
     public CanApproach(target: IEntity) {

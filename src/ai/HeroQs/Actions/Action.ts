@@ -15,7 +15,7 @@ export class Action {
     public Args: ActionArgs;
     public Name: string = "";
 
-    public Invoke(queue: ActionQueue) {
+    public Invoke(queue?: ActionQueue) {
         this.Args ? this.Action(this.Args) : this.Action();
     }
 

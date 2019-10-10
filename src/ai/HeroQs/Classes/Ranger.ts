@@ -46,7 +46,7 @@ new CodeCostMeter().init_ccmeter();
 
 const targetArgs: TargetArgs = new TargetArgs();
 
-targetArgs.MonsterFilter = ["bee"]; // ["bee", "goo"];
+targetArgs.MonsterFilter = ["poisio"]; // ["bee", "goo"];
 targetArgs.MonsterParams = { "min_xp": 100, "min_att": 60, "max_att": 200, };
 const target = new Target(targetArgs);
 
@@ -59,7 +59,7 @@ const combatStack: CombatStack = new CombatStack(combatArgs);
 combatStack.Load([autoattack, huntersmark, supershot]);
 
 const HP = new RestockItem(HP_SMALL, 15, 400, "potions");
-const MP = new RestockItem(MP_SMALL, 50, 600, "potions");
+const MP = new RestockItem(MP_SMALL, 15, 400, "potions");
 const shopArgs: ShopActionArgs = new ShopActionArgs();
 shopArgs.Restock = [HP, MP];
 shopArgs.DelayInMS = 30000;

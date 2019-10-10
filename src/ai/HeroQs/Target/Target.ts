@@ -117,17 +117,31 @@ export class Target {
 
         D.DebugInfo("Found " + targets.length + " eligible targets");
 
-        this.SortTargetsByDistance(args);
+        this.SortTargetsByHostilityThenDistance(args);
     }
 
     public InParentEntities(predicate: any) {
         return Object.values(parent.entities).filter(predicate);
     }
 
-    public SortTargetsByDistance(args: TargetArgs) {
+    public SortTargetsByHostilityThenDistance(args: TargetArgs) {
         if (!args.PotentialTargets) { return; }
 
         args.PotentialTargets.sort((current: IEntity, next: IEntity) => {
+            if (this.IsTargetingFriendly(current)) {
+                if (this.IsTargetingFriendly(next)) {
+                    const currentHP = current.hp / current.max_hp;
+                    const nextHP = next.hp / next.max_hp;
+
+                    if (currentHP < nextHP) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                } else {
+                    return -1;
+                }
+            }
             const distanceCurrent = distance(character, current);
             const distanceNext = distance(character, next);
             // Else go to the 2nd item
