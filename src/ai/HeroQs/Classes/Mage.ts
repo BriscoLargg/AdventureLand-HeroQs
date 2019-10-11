@@ -19,6 +19,7 @@ import { SkillName } from "GameDefinitions/ISkill";
 import { Combat } from "../Combat/Combat";
 import { CombatArgs } from "../Combat/CombatArgs";
 import { TargetArgs } from "../Target/TargetArgs";
+import { Movement } from "../Base/Movement";
 
 set_skillbar(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]);
 
@@ -46,7 +47,7 @@ new CodeCostMeter().init_ccmeter();
 
 const targetArgs: TargetArgs = new TargetArgs();
 
-targetArgs.MonsterFilter = ["squig"]; // ["bee", "goo"];
+targetArgs.MonsterFilter = ["snake", "osnake"]; // ["bee", "goo"];
 targetArgs.MonsterParams = { "min_xp": 100, "min_att": 60, "max_att": 200, };
 const target = new Target(targetArgs);
 
@@ -54,7 +55,8 @@ const supershot = new Combat(new CombatArgs(SkillName.supershot, 30000));
 const huntersmark = new Combat(new CombatArgs(SkillName.huntersmark, 10000));
 const autoattack = new Combat(new CombatArgs(SkillName.attack, 250));
 
-const combatArgs = new CombatStackArgs(target);
+const movement = new Movement();
+const combatArgs = new CombatStackArgs(target, movement);
 const combatStack: CombatStack = new CombatStack(combatArgs);
 combatStack.Load([autoattack]);
 
@@ -70,6 +72,7 @@ const Q = new ActionQueue(new RepeatingActionArgs());
 Q.push(new UsePotionsAction(new RepeatingActionArgs()));
 Q.push(new RepeatingAction(new RepeatingActionArgs(), loot));
 Q.push(combatStack);
+Q.push(movement);
 // Q.push(target);
 Q.push(new ShopAction(shopArgs));
 /*

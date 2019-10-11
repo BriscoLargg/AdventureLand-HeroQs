@@ -30,8 +30,8 @@ export class Combat extends RepeatingAction {
         if (!this.Args) { D.DebugError("CombatActionArgs are undefined"); }
         if (this.IsCombatEnded()) { return; }
 
-        if (this.CombatTarget) {
-            this.ApproachAndAttack(this.CombatTarget);
+        if (this.CombatTarget && this.CanAttack(this.CombatTarget)) {
+            this.Attack(this.CombatTarget);
         }
     }
 
@@ -51,26 +51,8 @@ export class Combat extends RepeatingAction {
         }
     }
 
-    public Approach(target: IEntity) {
-        new Movement(target).Invoke();
-    }
-
-    public CanApproach(target: IEntity) {
-        return !in_attack_range(target);
-    }
-
     public CanAttack(target: IEntity) {
         return can_attack(target);
-    }
-
-    public ApproachAndAttack(target: IEntity) {
-        if (this.CanApproach(target)) {
-            this.Approach(target);
-        }
-
-        if (this.CanAttack(target)) {
-            this.Attack(target);
-        }
     }
 }
 

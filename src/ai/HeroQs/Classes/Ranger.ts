@@ -19,6 +19,7 @@ import { SkillName } from "GameDefinitions/ISkill";
 import { Combat } from "../Combat/Combat";
 import { CombatArgs } from "../Combat/CombatArgs";
 import { TargetArgs } from "../Target/TargetArgs";
+import { Movement } from "../Base/Movement";
 
 set_skillbar(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]);
 
@@ -37,16 +38,16 @@ game_log("To reload your code, first press 9 to stop the current AI, and then pr
 const HP_SMALL: IItem = {"name": "hpot0"};
 const MP_SMALL: IItem = {"name": "mpot0"};
 
-D.Level = DebugLevel.Information;
+D.Level = DebugLevel.Critical;
 D.Enabled = true;
 D.DrawingEnabled = true;
-D.CodeCost = false;
+D.CodeCost = true;
 
 new CodeCostMeter().init_ccmeter();
 
 const targetArgs: TargetArgs = new TargetArgs();
 
-targetArgs.MonsterFilter = ["poisio"]; // ["bee", "goo"];
+targetArgs.MonsterFilter = ["rat"]; // ["bee", "goo"];
 targetArgs.MonsterParams = { "min_xp": 100, "min_att": 60, "max_att": 200, };
 const target = new Target(targetArgs);
 
@@ -54,7 +55,9 @@ const supershot = new Combat(new CombatArgs(SkillName.supershot, 30000));
 const huntersmark = new Combat(new CombatArgs(SkillName.huntersmark, 10000));
 const autoattack = new Combat(new CombatArgs(SkillName.attack, 250));
 
-const combatArgs = new CombatStackArgs(target);
+const movement = new Movement();
+
+const combatArgs = new CombatStackArgs(target, movement);
 const combatStack: CombatStack = new CombatStack(combatArgs);
 combatStack.Load([autoattack, huntersmark, supershot]);
 
@@ -70,6 +73,7 @@ const Q = new ActionQueue(new RepeatingActionArgs());
 Q.push(new UsePotionsAction(new RepeatingActionArgs()));
 Q.push(new RepeatingAction(new RepeatingActionArgs(), loot));
 Q.push(combatStack);
+Q.push(movement);
 // Q.push(target);
 Q.push(new ShopAction(shopArgs));
 /*
