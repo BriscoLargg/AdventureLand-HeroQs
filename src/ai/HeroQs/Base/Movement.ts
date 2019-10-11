@@ -38,28 +38,33 @@ export class Movement extends RepeatingAction {
     }
 
     public ApproachTarget() {
-        if (this.canPathToTarget()) {
-            this.pathToTarget();
-        } else {
-            smart_move(this.Target);
-        }
+        this.pathToTarget();
     }
 
     public pathToTarget() {
-        if (this.Target) {
-            if (character.real_x && character.real_y) {
-                this.CharacterV = new Vector(character.real_x, character.real_y);
+        if (this.Target && !is_moving(character)) {
+            if (this.canPathToTarget()) {
+                const distanceToTarget = distance(character, this.Target);
+                const ratio = character.range / distanceToTarget;
 
-                const distance = character.range * 0.95;
-                // const ratio = 
-                const position = this.TargetV.vector_projection(this.CharacterV);
+                if (character.real_x && character.real_y) {
+                    if (!in_attack_range(this.Target) || (ratio > 2)) {
+                        this.CharacterV = new Vector(character.real_x, character.real_y);
 
-                if (D.Drawing()) {
-                    draw_line(this.CharacterV.x, this.CharacterV.y, position.x, position.y);
-                    draw_line(position.x, position.y, this.TargetV.x, this.TargetV.y);
+                        let position = this.CharacterV.subtract(this.TargetV);
+                        position = this.CharacterV.vector_projection(this.TargetV.add(ratio * distanceToTarget));
+                        position = position.add(this.TargetV);
+
+                        if (D.Drawing()) {
+                            draw_line(this.CharacterV.x, this.CharacterV.y, position.x, position.y);
+                            draw_line(position.x, position.y, this.TargetV.x, this.TargetV.y);
+                        }
+
+                        move(position.x, position.y);
+                    }
                 }
-
-                move(position.x, position.y);
+            } else {
+                smart_move(this.Target);
             }
         }
     }

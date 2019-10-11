@@ -6,7 +6,7 @@ import { Vector } from "../Base/Vector";
 export class TargetArgs extends BaseArgs {
     public CombatTarget?: IEntity | undefined;
     public CombatTargetVector?: Vector;
-    public MonsterFilter?: string[];
+    public MonsterFilter: string[] = [];
     public MonsterParams?: any;
     public PotentialTargets?: IEntity[];
 }

@@ -5,6 +5,9 @@ export interface IItem {
     g?: number;
   }
 
+export const HP_SMALL: IItem = {"name": "hpot0"};
+export const MP_SMALL: IItem = {"name": "mpot0"};
+
 export enum ItemName {
     _3shot = "3shot",
     _4fingers = "4fingers",
