@@ -3,7 +3,6 @@ import { ISkill, SkillName } from "GameDefinitions/ISkill";
 import { IEntity } from "./IEntity";
 import { IMonster } from "./IMonster";
 
-
 export interface IGameInfo {
     items: { [T in ItemName]: IItem };
     monsters: { [id: string]: IMonster };

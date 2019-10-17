@@ -1,77 +1,87 @@
 import { D } from "./Debug";
 
 import { IEntity } from "GameDefinitions/IEntity";
-import { RepeatingAction } from "../Actions/RepeatingAction";
-import { RepeatingActionArgs } from "../Actions/RepeatingActionArgs";
 import { Vector } from "./Vector";
 
-export class Movement extends RepeatingAction {
-    constructor(destination?: IEntity) {
-        super(new RepeatingActionArgs());
+import * as PF from "pathfinding";
+import { events } from "./Event";
 
-        this.Action = this.ApproachTarget;
-        this.Args.DelayInMS = 1000;
-        this.Name = "Movement";
+export class Movement {
+    constructor() {
+        events.on("TargetAcquired", (target) => { this.Reposition(target); });
     }
 
-    public CharacterV: Vector = new Vector(0, 0);
+    public CharP: Vector = new Vector(0, 0);
+    // public Grid: PF.Grid = new PF.Grid();
+    public LastMove: number = Date.now();
+    public Pathfinding: boolean = false;
+    public PreferredTarget: string = "";
     public Target?: IEntity;
     public TargetV: Vector = new Vector(0, 0);
-    public X!: number;
-    public Y!: number;
+
+    public SetPreferredTarget(mtype: string) {
+        this.PreferredTarget = mtype;
+    }
+
+    public Reposition(target: IEntity) {
+        if (Date.now() - this.LastMove > 2000) {
+            this.SetTargetPosition(target);
+            this.PathToTarget();
+            this.LastMove = Date.now();
+        }
+    }
 
     public SetTargetPosition(target: IEntity) {
+        if (character.real_x && character.real_y) {
+            this.CharP.set(character.real_x, character.real_y);
+        }
+
         if (target) {
             this.Target = target;
 
+            // D.DebugCritical("Updating Target Position");
+
             if (this.Target.real_x && this.Target.real_y) {
-                this.X = this.Target.real_x;
-                this.Y = this.Target.real_y;
-                this.TargetV = new Vector(this.X, this.Y);
+                this.TargetV = new Vector(this.Target.real_x, this.Target.real_y);
+                this.TargetV = this.TargetV.subtract(this.CharP);
             }
         } else {
+
+            D.DebugCritical("Can't Find Target Position");
+
             this.Target = character;
-            this.X = this.CharacterV.x;
-            this.Y = this.CharacterV.y;
-            this.TargetV = this.CharacterV;
+            this.TargetV.set(this.CharP.x, this.CharP.y);
         }
     }
 
-    public ApproachTarget() {
-        this.pathToTarget();
-    }
+    public PathToTarget() {
+        if (this.Target) {
+            let range = character.range;
+            let targetDistance = distance(character, this.Target);
+            let ratio = range / targetDistance;
 
-    public pathToTarget() {
-        if (this.Target && !is_moving(character)) {
-            if (this.canPathToTarget()) {
-                const distanceToTarget = distance(character, this.Target);
-                const ratio = character.range / distanceToTarget;
+            if (ratio > 8 || ratio < 1) {
 
-                if (character.real_x && character.real_y) {
-                    if (!in_attack_range(this.Target) || (ratio > 2)) {
-                        this.CharacterV = new Vector(character.real_x, character.real_y);
+                let destination: Vector = this.TargetV.clone();
+                destination = destination.multiply(ratio);
 
-                        let position = this.CharacterV.subtract(this.TargetV);
-                        position = this.CharacterV.vector_projection(this.TargetV.add(ratio * distanceToTarget));
-                        position = position.add(this.TargetV);
+                destination = destination.add(this.CharP);
 
-                        if (D.Drawing()) {
-                            draw_line(this.CharacterV.x, this.CharacterV.y, position.x, position.y);
-                            draw_line(position.x, position.y, this.TargetV.x, this.TargetV.y);
-                        }
-
-                        move(position.x, position.y);
-                    }
-                }
-            } else {
-                smart_move(this.Target);
+                move(destination.x, destination.y);
             }
-        }
+
+        }/* else {
+            if (!is_moving(character) && !this.Pathfinding && this.PreferredTarget !== "") {
+                this.Pathfinding = true;
+                D.DebugCritical("Try to smart move to " + this.PreferredTarget);
+                smart_move(this.PreferredTarget, () => this.Pathfinding = false);
+            }
+        }*/
     }
 
-    public canPathToTarget() {
-        return can_move_to(this.X, this.Y);
-    }
+    /*public canPathToTarget() {
+        return can_move_to(this.DestinationP.x, this.DestinationP.y);
+    }*/
 
     public noop() {
         // Noop
@@ -87,4 +97,4 @@ export class Movement extends RepeatingAction {
 	if(myX === undefined || myY === undefined ||
 		theirX === undefined || theirY === undefined)	return;*/
 
-	//smart_move(myX+(theirX-myX)/2, myY+(theirY-myY)/2);
+    // smart_move(myX+(theirX-myX)/2, myY+(theirY-myY)/2);

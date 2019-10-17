@@ -1,19 +1,20 @@
 {
   "compilerOptions": {
-      "target": "ESNext",
-      "module": "commonjs" ,
-      "lib": ["esnext", "dom"],
       "allowSyntheticDefaultImports": true,
+      "alwaysStrict": true,
+      "baseUrl": "./src",
+      "downlevelIteration": true,
+      "esModuleInterop": true,
+      "lib": ["esnext", "dom"],
+      "module": "commonjs" ,
       "noEmit": true,
-      "strict": true,
       "noImplicitAny": true,
+      "noImplicitThis": true,
+      "resolveJsonModule": true,
+      "sourceMap": true,
+      "strict": true,
       "strictNullChecks": true,
       "strictPropertyInitialization": true,
-      "noImplicitThis": true,
-      "alwaysStrict": true,
-      "esModuleInterop": true,
-      "downlevelIteration": true,
-      "baseUrl": "./src",
-      "sourceMap": true
+      "target": "ESNext",
   }
 }

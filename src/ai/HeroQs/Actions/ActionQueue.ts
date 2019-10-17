@@ -2,11 +2,10 @@ import { D } from "../Base/Debug";
 
 import { Action } from "./Action";
 import { RepeatingAction } from "./RepeatingAction";
-import { RepeatingActionArgs } from "./RepeatingActionArgs";
 
 export class ActionQueue extends RepeatingAction {
-    constructor(args: RepeatingActionArgs) {
-        super(args);
+    constructor() {
+        super();
     }
 
     public Actions: Action[] = [];
@@ -75,8 +74,8 @@ export class ActionQueue extends RepeatingAction {
     }
 
     public PushToQueue(action: ActionQueue) {
-        D.DebugInfo("Repeat whole queue/stack: " + action.Name + " after " + action.Args.DelayInMS + "ms");
-        setTimeout(() => action.push(this), action.Args.DelayInMS);
+        D.DebugInfo("Repeat whole queue/stack: " + action.Name + " after " + action.DelayInMS + "ms");
+        setTimeout(() => action.push(this), action.DelayInMS);
     }
 
     public GetNextAndInvoke() {

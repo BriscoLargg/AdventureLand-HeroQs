@@ -120,7 +120,7 @@ export class Vector {
     }
 
     public vector_projection(v: Vector) {
-        const scalar = this.scalar_projection(v); v.length()
+        const scalar = this.scalar_projection(v);
         const length: number = v.length();
         return v.divide(length).multiply(scalar);
     }

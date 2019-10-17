@@ -2,7 +2,7 @@ import { Serializable } from "../ai/HeroQs/Base/Serializable";
 
 export interface ISkill {
   mp?: number;
-  name: SkillName;
+  name: string;
   cooldown: number;
   ratio?: number;
   range?: number;

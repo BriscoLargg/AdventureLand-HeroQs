@@ -22,4 +22,5 @@ export interface IEntity {
     // Buffs are 's' ???? -_-
     s?: { [T in keyof string]: IBuff };
     targeting_party?: boolean;
+    cooperative?: boolean;
   }

@@ -1,48 +1,45 @@
 import { D, DebugLevel } from "../Base/Debug";
 
 import { HP_SMALL, MP_SMALL } from "GameDefinitions/IItem";
-import { SkillName } from "GameDefinitions/ISkill";
 import { ActionQueue } from "../Actions/ActionQueue";
 import { RepeatingAction } from "../Actions/RepeatingAction";
-import { RepeatingActionArgs } from "../Actions/RepeatingActionArgs";
 import { UsePotionsAction } from "../Actions/UsePotionsAction";
 import { Movement } from "../Base/Movement";
-import { Combat } from "../Combat/Combat";
-import { CombatArgs } from "../Combat/CombatArgs";
-import { CombatStack } from "../Combat/CombatStack";
-import { CombatStackArgs } from "../Combat/CombatStackArgs";
-import { RestockItem } from "../Shop/RestockItem";
-import { ShopAction } from "../Shop/ShopAction";
-import { ShopActionArgs } from "../Shop/ShopActionArgs";
-import { Target } from "../Target/Target";
-import { TargetArgs } from "../Target/TargetArgs";
+import { ITargetArgs, Target } from "../Base/Target";
+import { Combat } from "../Base/Combat";
+
+import { CombatStack } from "../Actions/CombatStack";
+
+import { ShopAction } from "../Actions/ShopAction";
+
+import G_skills from "../../../GameDefinitions/G/skills.json";
 
 import { CodeCostMeter } from "GUI/CodeCostMeter";
+import { RestockItem } from "../Actions/RestockItem";
 
 export class HeroClass {
     constructor() {
         this.MovementTactics = new Movement();
-        this.Queue = new ActionQueue(new RepeatingActionArgs());
+        this.Queue = new ActionQueue();
 
-        const targets: TargetArgs = new TargetArgs();
+        const targets: ITargetArgs = {};
         targets.MonsterFilter = [];
         targets.MonsterParams = { "min_xp": 100, "min_att": 60, "max_att": 200, };
         this.Targeting = new Target(targets);
 
-        const combatArgs = new CombatStackArgs(this.Targeting, this.MovementTactics);
-        this.CombatTactics = new CombatStack(combatArgs);
+        this.CombatTactics = new CombatStack(this.Targeting, this.MovementTactics);
 
-        const autoattack = new Combat(new CombatArgs(SkillName.attack, 250));
+        const autoattack = new Combat("attack");
         this.CombatTactics.Load([autoattack]);
 
         this.ShoppingSetup();
         this.KeymapSetup();
         this.DebugSetup();
 
-        this.Queue.push(new UsePotionsAction(new RepeatingActionArgs()));
-        this.Queue.push(new RepeatingAction(new RepeatingActionArgs(), loot));
+        this.Queue.push(new UsePotionsAction());
+        this.Queue.push(new RepeatingAction(loot));
         this.Queue.push(this.CombatTactics);
-        this.Queue.push(this.MovementTactics);
+        //this.Queue.push(this.MovementTactics);
         this.Queue.push(this.Shopping);
 
         this.Queue.Start();
@@ -57,10 +54,8 @@ export class HeroClass {
     public ShoppingSetup() {
         const HP = new RestockItem(HP_SMALL, 15, 400, "potions");
         const MP = new RestockItem(MP_SMALL, 15, 400, "potions");
-        const shopArgs: ShopActionArgs = new ShopActionArgs();
-        shopArgs.Restock = [HP, MP];
-        shopArgs.DelayInMS = 30000;
-        this.Shopping = new ShopAction(shopArgs);
+
+        this.Shopping = new ShopAction( { "Restock": [HP, MP] });
     }
 
     public DebugSetup() {

@@ -1,10 +1,8 @@
 import { ActionQueue } from "ai/HeroQs/Actions/ActionQueue";
-import { ActionArgs } from "./ActionArgs";
 
 export class Action {
-    constructor(args: ActionArgs, delegate?: any) {
+    constructor(delegate?: any) {
         this.Action = delegate;
-        this.Args = args;
 
         if (delegate && delegate.name) {
             this.Name = delegate.name;
@@ -12,11 +10,12 @@ export class Action {
     }
 
     public Action: any;
-    public Args: ActionArgs;
+    public DelayInMS: number = 250;
     public Name: string = "";
+    public TickCount: number = 1;
 
     public Invoke(queue?: ActionQueue) {
-        this.Args ? this.Action(this.Args) : this.Action();
+        this.Action();
     }
 
     public PushToQueue(queue: ActionQueue) {
@@ -24,6 +23,6 @@ export class Action {
     }
 
     public static Create() {
-        return new Action(new ActionArgs());
+        return new Action();
     }
 }

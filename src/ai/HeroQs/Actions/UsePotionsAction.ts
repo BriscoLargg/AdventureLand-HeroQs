@@ -1,18 +1,17 @@
 import { D } from "../Base/Debug";
 
 import { RepeatingAction } from "./RepeatingAction";
-import { RepeatingActionArgs } from "./RepeatingActionArgs";
 
 import { SkillName } from "GameDefinitions/ISkill";
 
 export class UsePotionsAction extends RepeatingAction {
-    constructor(args: RepeatingActionArgs) {
-        super(args, 200);
-        this.Args = args;
+    constructor() {
+        super();
+
         this.Action = this.UseHPOrMP;
+        this.DelayInMS = 200;
     }
 
-    public Args: RepeatingActionArgs;
     public LastPotion: Date = new Date();
     public Name: string = "UsePotions";
     public MissingHP: number = character.max_hp - character.hp;
