@@ -14,7 +14,7 @@ import { ShopAction } from "../Actions/ShopAction";
 
 import G_skills from "../../../GameDefinitions/G/skills.json";
 
-import { CodeCostMeter } from "GUI/CodeCostMeter";
+// import { CodeCostMeter } from "../../gui/CodeCostMeter";
 import { RestockItem } from "../Actions/RestockItem";
 
 export class HeroClass {

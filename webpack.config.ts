@@ -2,17 +2,7 @@ import fs from "fs";
 import http, { ClientRequest } from "http";
 import path from "path";
 import querystring from "querystring";
-import webpack from "webpack";
-
-// Useful type definitions
-interface IChunk {
-  name: string;
-  hash: string;
-  files: string[];
-  entryModule: {
-    rawRequest: string;
-  };
-}
+import { Chunk, Compiler, Configuration } from 'webpack';
 
 interface ISaveSlot {
   name: string;
@@ -40,9 +30,9 @@ function getAuthCookie(): string {
 // This structure determines which files are compiled as well as
 // how they are saved to AL
 const saveMap: { [filename: string]: ISaveSlot } = {
-    "./src/ai/HeroQs/Classes/Mage.ts": mkSaveSlot("Mage", 3),
-    "./src/ai/HeroQs/Classes/Priest.ts": mkSaveSlot("Priest", 2),
-    "./src/ai/HeroQs/Classes/Ranger.ts": mkSaveSlot("Ranger", 1),
+    "Mage": mkSaveSlot("Mage", 3),
+    "Priest": mkSaveSlot("Priest", 2),
+    "Ranger": mkSaveSlot("Ranger", 1),
   // "./src/ai/merchant.ts": mkSaveSlot("merchant", 3),
 };
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,7 +41,7 @@ const saveMap: { [filename: string]: ISaveSlot } = {
 
 const authCookie: string = getAuthCookie();
 
-class ALUploader {
+class AdventurelandUploader {
   // A map from our chunks to their versions so that we can avoid uploading
   // files that didn't change
   private chunkVersions: Map<string, string> = new Map();
@@ -64,15 +54,15 @@ class ALUploader {
   private uploadFile = (jsFile: string, saveName: string, slot: number) => {
     const code = fs.readFileSync(jsFile);
     const req = http.request(
-      {
-        "headers": {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Cookie": authCookie,
+        {
+          hostname: 'adventure.land',
+          path: '/api/save_code',
+          method: 'POST',
+          headers: {
+            'Cookie': authCookie,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         },
-        "hostname": "adventure.land",
-        "method": "POST",
-        "path": "/api/save_code",
-      },
       (res) => {
         res.on("data", (response) => {
           const asJson: IApiResponse[] = JSON.parse(response.toString());
@@ -108,21 +98,21 @@ class ALUploader {
     req.end();
   }
 
-  private processFile = (typescriptFile: string, jsFile: string) => {
-    console.log("Processing ", typescriptFile, jsFile);
-    const save = saveMap[typescriptFile];
+  private processFile = (tsFile: string, jsFile: string) => {
+    console.log("Processing ", tsFile);
+    const save = saveMap[tsFile];
     this.uploadFile(jsFile, save.name, save.slot);
   }
 
-  private processChunk = (chunk: IChunk) => {
-    chunk.files.forEach((f) => this.processFile(chunk.entryModule.rawRequest, f));
+  private processChunk = (chunk: Chunk ) => {
+    chunk.files.forEach((f) => this.processFile(chunk.name, f));
   }
 
-  public apply(compiler: webpack.Compiler) {
-    compiler.hooks.afterEmit.tap("ALUploader", (compilation) => {
-      const changed: IChunk[] = compilation.chunks.filter((chunk: IChunk) => {
+  public apply(compiler: Compiler) {
+    compiler.hooks.afterEmit.tap("AdventurelandUploader", (compilation) => {
+      const changed: Chunk[] = Array.from(compilation.chunks).filter((chunk: Chunk) => {
         const old = this.chunkVersions.get(chunk.name);
-        this.chunkVersions.set(chunk.name, chunk.hash);
+        this.chunkVersions.set(chunk.name, chunk.hash ? chunk.hash : "");
         return !old || old !== chunk.hash;
       });
 
@@ -131,7 +121,7 @@ class ALUploader {
   }
 }
 
-const config: webpack.Configuration = {
+const config: Configuration = {
     "devtool": "eval-source-map",
     "mode": "development",
     // list all the files here that you would like to build individually.
@@ -149,7 +139,7 @@ const config: webpack.Configuration = {
         "filename": "dist/[name].js",
         "path": __dirname,
     },
-    "plugins": [new ALUploader()],
+    "plugins": [new AdventurelandUploader()],
     "resolve": {
         "extensions": [".ts", ".js"],
         "modules": [ path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "src")],
