@@ -23,4 +23,4 @@ export interface IEntity {
     s?: { [T in keyof string]: IBuff };
     targeting_party?: boolean;
     cooperative?: boolean;
-  }
+}

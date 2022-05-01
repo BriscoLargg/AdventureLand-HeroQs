@@ -29,10 +29,11 @@ function getAuthCookie(): string {
 ////////////////////////////////////////////////////////////////////////////////
 // This structure determines which files are compiled as well as
 // how they are saved to AL
+
 const saveMap: { [filename: string]: ISaveSlot } = {
-    "Mage": mkSaveSlot("Mage", 3),
-    "Priest": mkSaveSlot("Priest", 2),
-    "Ranger": mkSaveSlot("Ranger", 1),
+    "./src/ai/HeroQs/Classes/Mage.ts": mkSaveSlot("Mage", 3),
+    "./src/ai/HeroQs/Classes/Priest.ts": mkSaveSlot("Priest", 2),
+    "./src/ai/HeroQs/Classes/Ranger.ts": mkSaveSlot("Ranger", 1),
   // "./src/ai/merchant.ts": mkSaveSlot("merchant", 3),
 };
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,12 +101,14 @@ class AdventurelandUploader {
 
   private processFile = (tsFile: string, jsFile: string) => {
     console.log("Processing ", tsFile);
-    const save = saveMap[tsFile];
+    const save = saveMap['./src/ai/HeroQs/Classes/' + tsFile + ".ts"];
     this.uploadFile(jsFile, save.name, save.slot);
   }
 
   private processChunk = (chunk: Chunk ) => {
-    chunk.files.forEach((f) => this.processFile(chunk.name, f));
+    chunk.files.forEach((f) => {
+        this.processFile(chunk.name, f);    
+    });
   }
 
   public apply(compiler: Compiler) {
@@ -122,28 +125,36 @@ class AdventurelandUploader {
 }
 
 const config: Configuration = {
-    "devtool": "eval-source-map",
-    "mode": "development",
+    mode: "development",
+    devtool: "eval-source-map",
+    
     // list all the files here that you would like to build individually.
 
-    "entry": Object.entries(saveMap).reduce((prev, [filename, save]) => ({ ...prev, [save.name]: filename }), {}),
-    "module": {
-        "rules": [{
-                "exclude": /node_modules/,
-                "include": [path.resolve(__dirname, "src")],
-                "test": /\.ts$/,
-                "use": "babel-loader", },
-                ],
+    entry: Object.entries(saveMap).reduce((prev, [filename, save]) => ({ ...prev, [save.name]: filename }), {}),
+    output: {
+        filename: "dist/[name].js",
+        path: __dirname,
     },
-    "output": {
-        "filename": "dist/[name].js",
-        "path": __dirname,
+
+    resolve: {
+        extensions: [".ts", ".js"],
+        modules: [ path.resolve(__dirname, "src")],
+        fallback: { "events" : require.resolve("events/") }
     },
-    "plugins": [new AdventurelandUploader()],
-    "resolve": {
-        "extensions": [".ts", ".js"],
-        "modules": [ path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "src")],
+
+    module: {
+        rules: [
+            {
+                exclude: /node_modules/,
+                include: [path.resolve(__dirname, "src")],
+                test: /\.ts$/,
+                use: "babel-loader", 
+            },
+        ],
     },
+
+    plugins: [new AdventurelandUploader()],
+    
 };
 
 export default config;

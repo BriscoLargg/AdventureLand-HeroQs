@@ -4,7 +4,7 @@ import { IEntity } from "GameDefinitions/IEntity";
 import { ActionQueue } from "./ActionQueue";
 import { Combat } from "../Base/Combat";
 
-import { events } from "../Base/Event";
+import { gameEvents } from "../Base/Event";
 import { Movement } from "../Base/Movement";
 import { Target } from "../Base/Target";
 
@@ -33,13 +33,13 @@ export class CombatStack extends ActionQueue {
     public SearchAndDestroy: boolean = false;
 
     private AddEvents() {
-        events.on("ToggleCombat", this.ToggleCombat);
-        events.on("ResupplyInProgress", () => this.CombatEnabled = false );
+        gameEvents.on("ToggleCombat", this.ToggleCombat);
+        gameEvents.on("ResupplyInProgress", () => this.CombatEnabled = false );
         // events.on("ResupplyInProgress", () => set_message("Combat Paused"));
-        events.on("ResupplyEnded", () => this.CombatEnabled = true );
+        gameEvents.on("ResupplyEnded", () => this.CombatEnabled = true );
         // events.on("ResupplyEnded", () => set_message("Combat Resumed"));
 
-        events.on("TargetAcquired", (target) => {
+        gameEvents.on("TargetAcquired", (target) => {
             D.DebugCritical("TargetAcquiredEvent");
             this.CurrentTarget = target;
         });
@@ -47,7 +47,7 @@ export class CombatStack extends ActionQueue {
 
     public UpdateTargeting() {
         this.TargetingSolution.AcquireTargets();
-        this.TargetPositioning.SetPreferredTarget(this.TargetingSolution.GetPreferredTarget());
+        // this.TargetPositioning.SetPreferredTarget(this.TargetingSolution.GetPreferredTarget());
     }
 
     public pop(): Combat | undefined {

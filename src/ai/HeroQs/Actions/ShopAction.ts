@@ -4,7 +4,7 @@ import { RepeatingAction } from "./RepeatingAction";
 
 import { IItem } from "GameDefinitions/IItem";
 import { RestockItem } from "./RestockItem";
-import { events } from "../Base/Event";
+import { gameEvents } from "../Base/Event";
 
 export interface IShopArgs {
     Restock?: RestockItem[];
@@ -50,7 +50,7 @@ export class ShopAction extends RepeatingAction {
     if (this.ResupplyInProgress) { return; }
     this.ResupplyInProgress = true;
 
-    events.emit("ResupplyInProgress");
+    gameEvents.emit("ResupplyInProgress");
 
     smart_move({ "to": stockItem.Vendor, "return": true }, () => {
       if (this.Restock) {
@@ -61,7 +61,7 @@ export class ShopAction extends RepeatingAction {
         }
       }
 
-      events.emit("ResupplyEnded");
+      gameEvents.emit("ResupplyEnded");
     });
   }
 

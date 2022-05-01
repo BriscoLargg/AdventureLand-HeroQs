@@ -6,7 +6,7 @@ class Priest extends HeroClass {
     constructor() {
         super();
 
-        this.Targeting.MonsterFilter.push("armadillo");
+        // this.Targeting.MonsterFilter.push("armadillo");
     }
 }
 

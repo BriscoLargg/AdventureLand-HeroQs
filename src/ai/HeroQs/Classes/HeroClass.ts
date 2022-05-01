@@ -23,8 +23,9 @@ export class HeroClass {
         this.Queue = new ActionQueue();
 
         const targets: ITargetArgs = {};
-        targets.MonsterFilter = [];
-        targets.MonsterParams = { "min_xp": 100, "min_att": 60, "max_att": 200, };
+        targets.TargetFilters = [ ((t) => t.max_hp >= 1200) ];
+        // targets.MonsterFilter = [];
+        // targets.MonsterParams = { "min_xp": 100, "min_att": 60, "max_att": 200, };
         this.Targeting = new Target(targets);
 
         this.CombatTactics = new CombatStack(this.Targeting, this.MovementTactics);

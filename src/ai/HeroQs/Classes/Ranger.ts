@@ -9,9 +9,6 @@ class Ranger extends HeroClass {
     constructor() {
         super();
 
-        D.CodeCost = false;
-        D.Level = DebugLevel.Error;
-
         const supershot = new Combat("huntersmark");
         const huntersmark = new Combat("supershot");
 
@@ -19,9 +16,18 @@ class Ranger extends HeroClass {
         this.CombatTactics.push(huntersmark);
 
         //this.Targeting.Args.MonsterFilter.push("mrgreen");
-        this.Targeting.MonsterFilter.push("croc");
+        // this.Targeting.MonsterFilter.push("croc");
+        // this.Targeting.MonsterFilter.push(".*");
         //this.Targeting.Args.MonsterFilter.push("scorpion");
     }
+    
+    public DebugSetup() {
+            D.Level = DebugLevel.Verbose;
+            D.Enabled = true;
+            D.DrawingEnabled = true;
+            D.CodeCost = true;
+        }
+
 }
 
 export const RangerClass = new Ranger();

@@ -4,7 +4,7 @@ import { IEntity } from "GameDefinitions/IEntity";
 import { RepeatingAction } from "../Actions/RepeatingAction";
 
 import G_skills from "../../../GameDefinitions/G/skills.json";
-import { events } from "./Event";
+import { gameEvents } from "./Event";
 import { Skill } from "./Skill";
 
 const AUTO_ATTACK_DELAY = 250;
@@ -26,7 +26,7 @@ export class Combat extends RepeatingAction {
             this.Name = this.Skill.name;
         }
 
-        events.on("TargetAcquired", (target) => {
+        gameEvents.on("TargetAcquired", (target) => {
             this.CombatTarget = target;
         });
     }

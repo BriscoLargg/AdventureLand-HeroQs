@@ -7,4 +7,4 @@ export interface IEvent {
   done: void;
 }
 
-export const events: EventEmitter = new EventEmitter();
+export const gameEvents: EventEmitter = new EventEmitter();

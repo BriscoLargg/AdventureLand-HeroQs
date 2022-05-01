@@ -15,7 +15,7 @@ class Debug {
 
     public printAtDebugLevel(message: string, level: DebugLevel) {
         // D.DebugInfo("Try to print debug at " + level + " and DebugLevel " + args.DebugLevel);
-        if (this.Enabled && level <= this.Level) {
+        if ((this.Enabled && level <= this.Level) || level === DebugLevel.Critical) {
             console.log(message);
         }
     }

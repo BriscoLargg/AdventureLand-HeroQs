@@ -4,11 +4,12 @@ import { IEntity } from "GameDefinitions/IEntity";
 import { Vector } from "./Vector";
 
 import * as PF from "pathfinding";
-import { events } from "./Event";
+import { gameEvents } from "./Event";
+import { ChunkGraph } from "webpack";
 
 export class Movement {
     constructor() {
-        events.on("TargetAcquired", (target) => { this.Reposition(target); });
+        gameEvents.on("TargetAcquired", (target) => { this.Reposition(target); });
     }
 
     public CharP: Vector = new Vector(0, 0);
@@ -24,7 +25,7 @@ export class Movement {
     }
 
     public Reposition(target: IEntity) {
-        if (Date.now() - this.LastMove > 2000) {
+        if (Date.now() - this.LastMove > 1000) {
             this.SetTargetPosition(target);
             this.PathToTarget();
             this.LastMove = Date.now();
@@ -58,14 +59,20 @@ export class Movement {
         if (this.Target) {
             let range = character.range;
             let targetDistance = distance(character, this.Target);
-            let ratio = range / targetDistance;
+            // let ratio = range / targetDistance;
 
-            if (ratio > 8 || ratio < 1) {
+            D.DebugVerbose(`${this.Target} target at distance ${targetDistance} with range ${character.range}`)
+
+            if (targetDistance > character.range || targetDistance < 50 ) {
 
                 let destination: Vector = this.TargetV.clone();
-                destination = destination.multiply(ratio);
 
+                // destination = destination.multiply(ratio);
+            
                 destination = destination.add(this.CharP);
+                destination = destination.add(targetDistance);
+
+                D.DebugVerbose("original coords: " + this.TargetV.x + "," + this.TargetV.y + "   new coords: " + destination.x + "," + destination.y);
 
                 move(destination.x, destination.y);
             }

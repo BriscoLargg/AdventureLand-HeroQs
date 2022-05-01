@@ -7,8 +7,8 @@ class Mage extends HeroClass {
         super();
 
         D.CodeCost = false;
-        this.Targeting.MonsterFilter.push("mrpumpkin");
-        this.Targeting.MonsterFilter.push("mrgreen");
+        // this.Targeting.MonsterFilter.push("mrpumpkin");
+        // this.Targeting.MonsterFilter.push("mrgreen");
     }
 }
 

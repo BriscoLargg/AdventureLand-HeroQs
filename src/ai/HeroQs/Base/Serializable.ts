@@ -1,9 +1,9 @@
-import { fromJSON } from "tough-cookie";
+//import { fromJSON } from "tough-cookie";
 import { D } from "./Debug";
 
 export class Serializable {
     constructor(json: string) {
-        fromJSON(json);
+        Serializable.fromJSON(json);
     }
 
     public static fromJSON(json: any) {
