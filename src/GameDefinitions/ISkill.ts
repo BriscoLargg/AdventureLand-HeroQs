@@ -1,4 +1,4 @@
-import { Serializable } from "../ai/HeroQs/Base/Serializable";
+import { Serializable } from "../HeroQs/Base/Serializable";
 
 export interface ISkill {
   mp?: number;

@@ -3,7 +3,7 @@ import { D, DebugLevel } from "../Base/Debug";
 import { Combat } from "../Base/Combat";
 import { HeroClass } from "./HeroClass";
 
-import G_skills from "../../../GameDefinitions/G/skills.json";
+import G_skills from "../../GameDefinitions/G/skills.json";
 
 class Ranger extends HeroClass {
     constructor() {

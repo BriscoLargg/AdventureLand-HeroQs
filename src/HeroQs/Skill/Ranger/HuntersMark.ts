@@ -1,4 +1,4 @@
-import { ISkill, SkillName } from "../../../../GameDefinitions/ISkill";
+import { ISkill, SkillName } from "../../../GameDefinitions/ISkill";
 
 export class HuntersMark implements ISkill {
     public name: SkillName = SkillName.huntersmark;

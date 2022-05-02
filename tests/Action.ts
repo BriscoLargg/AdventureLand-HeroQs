@@ -1,4 +1,4 @@
-import { Action } from "ai/HeroQs/Actions/Action";
+import { Action } from "HeroQs/Actions/Action";
 
 describe("Action", () => {
     describe("has delegate ", () => {

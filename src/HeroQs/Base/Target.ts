@@ -21,6 +21,7 @@ export class Target {
     public CombatTarget?: IEntity | undefined;
     public CombatTargetVector?: Vector;
     public PotentialTargets?: IEntity[];
+    public AllMonsters?: IEntity[];
     public TargetFilters: [ (target: IEntity) => boolean ] = [ () => true ];
     // const filteredTargets = targets.filter((t) => t.max_hp > 200)
 
@@ -71,10 +72,12 @@ export class Target {
         if (D.Drawing()) {
             clear_drawings();
 
-            if (this.PotentialTargets) {
-                for (const monster of this.PotentialTargets) {
-                    if (monster.real_x && monster.real_y) {
-                        draw_circle(monster.real_x, monster.real_y, character.range);
+            if (this.AllMonsters) {
+                for (const monster of this.AllMonsters) {
+                    if (this.PotentialTargets?.find(m => (m.id === monster.id)) && monster.real_x && monster.real_y) {
+                        draw_circle(monster.real_x, monster.real_y, character.range, 2, 0xff0000);
+                    } else if (monster.real_x && monster.real_y) {
+                        draw_circle(monster.real_x, monster.real_y, 10, 4, 0x00ff00);
                     }
                 }
             }
@@ -90,7 +93,7 @@ export class Target {
     // Default to true if no filter provided
     public FilterTargetsAndHostiles() {
 
-        let targets = this.InParentEntities((e: IMonster) => (e.type === "monster"));
+        let targets = this.AllMonsters = this.InParentEntities((e: IMonster) => (e.type === "monster"));
 
         if (targets) {
             this.TargetFilters.forEach(tFilter => {

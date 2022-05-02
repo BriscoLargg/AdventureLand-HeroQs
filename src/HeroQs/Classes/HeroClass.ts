@@ -12,7 +12,7 @@ import { CombatStack } from "../Actions/CombatStack";
 
 import { ShopAction } from "../Actions/ShopAction";
 
-import G_skills from "../../../GameDefinitions/G/skills.json";
+import G_skills from "../../GameDefinitions/G/skills.json";
 
 // import { CodeCostMeter } from "../../gui/CodeCostMeter";
 import { RestockItem } from "../Actions/RestockItem";

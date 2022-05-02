@@ -31,9 +31,9 @@ function getAuthCookie(): string {
 // how they are saved to AL
 
 const saveMap: { [filename: string]: ISaveSlot } = {
-    "./src/ai/HeroQs/Classes/Mage.ts": mkSaveSlot("Mage", 3),
-    "./src/ai/HeroQs/Classes/Priest.ts": mkSaveSlot("Priest", 2),
-    "./src/ai/HeroQs/Classes/Ranger.ts": mkSaveSlot("Ranger", 1),
+    "./src/HeroQs/Classes/Mage.ts": mkSaveSlot("Mage", 3),
+    "./src/HeroQs/Classes/Priest.ts": mkSaveSlot("Priest", 2),
+    "./src/HeroQs/Classes/Ranger.ts": mkSaveSlot("Ranger", 1),
   // "./src/ai/merchant.ts": mkSaveSlot("merchant", 3),
 };
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ class AdventurelandUploader {
 
   private processFile = (tsFile: string, jsFile: string) => {
     console.log("Processing ", tsFile);
-    const save = saveMap['./src/ai/HeroQs/Classes/' + tsFile + ".ts"];
+    const save = saveMap['./src/HeroQs/Classes/' + tsFile + ".ts"];
     this.uploadFile(jsFile, save.name, save.slot);
   }
 

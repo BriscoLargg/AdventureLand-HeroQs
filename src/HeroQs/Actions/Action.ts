@@ -1,4 +1,4 @@
-import { ActionQueue } from "ai/HeroQs/Actions/ActionQueue";
+import { ActionQueue } from "HeroQs/Actions/ActionQueue";
 
 export class Action {
     constructor(delegate?: any) {
